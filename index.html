@@ -31,17 +31,21 @@
     /* Hiệu ứng trái tim bay lơ lửng nền */
     .bg-heart {
       position: fixed;
-      color: rgba(255, 255, 255, 0.45);
+      bottom: -60px;
+      color: rgba(255, 255, 255, 0.55);
       font-size: 24px;
+      opacity: 0;
       animation: floatUp 6s linear infinite;
       z-index: 0;
       user-select: none;
+      pointer-events: none;
     }
 
     @keyframes floatUp {
-      0% { transform: translateY(100vh) scale(0.8); opacity: 0; }
-      50% { opacity: 0.8; }
-      100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+      0% { transform: translateY(0) scale(0.7) rotate(-10deg); opacity: 0; }
+      15% { opacity: 0.85; }
+      85% { opacity: 0.85; }
+      100% { transform: translateY(-115vh) scale(1.25) rotate(15deg); opacity: 0; }
     }
 
     /* 1. Phong bì thư ban đầu */
@@ -907,17 +911,19 @@ Cứ an tâm giữ gìn sức khỏe và mỉm cười thật tươi, mọi th�
       fireworksInterval = setInterval(launchConfetti, 350);
     }
 
-    // Tạo trái tim bay nền
+    // Tạo trái tim bay nền từ dưới lên rộn ràng
     function createHearts() {
       const container = document.getElementById('hearts-container');
-      const symbols = ['💖', '🌸', '✨', '🎀', '💕'];
-      for (let i = 0; i < 15; i++) {
+      const symbols = ['💖', '🌸', '✨', '🎀', '💕', '🎈', '🌷', '💝'];
+      const totalItems = 42;
+      for (let i = 0; i < totalItems; i++) {
         const heart = document.createElement('div');
         heart.className = 'bg-heart';
         heart.innerText = symbols[Math.floor(Math.random() * symbols.length)];
-        heart.style.left = Math.random() * 100 + 'vw';
-        heart.style.animationDuration = (Math.random() * 4 + 4) + 's';
-        heart.style.animationDelay = (Math.random() * 5) + 's';
+        heart.style.left = Math.random() * 98 + 'vw';
+        heart.style.fontSize = (Math.random() * 14 + 18) + 'px';
+        heart.style.animationDuration = (Math.random() * 4 + 4.5) + 's';
+        heart.style.animationDelay = (Math.random() * 6) + 's';
         container.appendChild(heart);
       }
     }
