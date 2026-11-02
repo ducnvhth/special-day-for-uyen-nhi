@@ -570,9 +570,9 @@
     <button class="card-icon-btn music-icon-btn playing" id="musicBtn" onclick="toggleMusic()" title="Bật/Tắt nhạc">🎵</button>
     <button class="card-icon-btn close-icon-btn" onclick="closeEnvelope()" title="Đóng thiệp">✕</button>
 
-    <div class="birthday-tag">Level Up Tuổi Mới 🚀</div>
+    <div class="birthday-tag">Level Up Tuổi Mới</div>
     <h1 class="name-title">Hồ Châu Uyển Nhi</h1>
-    <h2 class="sub-title">Happy Birthday, Em iu! 🎂</h2>
+    <h2 class="sub-title">Happy Birthday, Em iu!</h2>
 
     <!-- Khung ảnh cố định uyennhi.png -->
     <div class="photo-container">
@@ -890,27 +890,21 @@ Cứ an tâm giữ gìn sức khỏe và mỉm cười thật tươi, mọi th�
       }
     }
 
-    // Hiệu ứng pháo hoa liên tục 5 giây
+    // Hiệu ứng pháo hoa bắn liên tục cho đến khi đóng thiệp
     function fireworksShow() {
       if (fireworksInterval) clearInterval(fireworksInterval);
-      const duration = 5 * 1000;
-      const animationEnd = Date.now() + duration;
 
-      fireworksInterval = setInterval(function() {
-        const timeLeft = animationEnd - Date.now();
-        if (timeLeft <= 0) {
-          clearInterval(fireworksInterval);
-          fireworksInterval = null;
-          return;
-        }
-
+      const launchConfetti = function() {
         confetti({
-          particleCount: 50,
+          particleCount: 45,
           spread: 80,
           origin: { x: Math.random(), y: Math.random() * 0.4 + 0.3 },
           colors: ['#ff4081', '#ff80ab', '#ffd54f', '#ffffff', '#ff99c8', '#ff1744']
         });
-      }, 300);
+      };
+
+      launchConfetti();
+      fireworksInterval = setInterval(launchConfetti, 350);
     }
 
     // Tạo trái tim bay nền
