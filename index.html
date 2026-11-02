@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Happy Birthday Hồ Châu Uyển Nhi 💖</title>
   
-  <!-- Font chữ dễ thương, hiện đại -->
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Pacifico&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+  <!-- Font chữ dễ thương, hiện đại (hỗ trợ đầy đủ tiếng Việt) -->
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Pacifico&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
   <!-- Thư viện hiệu ứng pháo hoa -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 
@@ -271,9 +271,11 @@
     }
 
     .name-title {
-      font-family: 'Fredoka', cursive;
+      font-family: 'Baloo 2', 'Quicksand', sans-serif;
+      font-weight: 800;
       color: #ff3366;
-      font-size: 26px;
+      font-size: 28px;
+      line-height: 1.25;
       margin-bottom: 4px;
     }
 
@@ -582,9 +584,10 @@
     <!-- LỜI CHÚC CHO UYỂN NHI -->
     <div class="letter-body">
       Gửi Uyển Nhi - cô gái ngọt ngào và năng lượng nhất trần đời!<br>
-      Chúc mừng sinh nhật em iu! Người ta thường chúc nhau thành công, riêng tuổi mới này, anh chỉ ước mọi điều dịu dàng nhất sẽ đến với sức khỏe của em. Mong những vết mẩn ngứa lì lợm sớm rời xa để trả lại sự thoải mái cho em, mong tâm trí em luôn thư thái, gạt bỏ hết âu lo để mỗi tối đặt lưng xuống là một giấc ngủ trọn vẹn đến sáng.
-
-Em đã vất vả nhiều rồi, tuổi mới hãy yêu thương và chiều chuộng bản thân hơn một chút nhé. Chúc em mọi việc hanh thông, luôn xinh tươi và rạng rỡ. Ngoài kia có làm em mệt mỏi thế nào, về bên anh vẫn luôn là chốn bình yên nhất để em tựa vào. Cứ an tâm dưỡng sức và mỉm cười thật tươi, mọi thứ để anh lo!
+      Chúc mừng sinh nhật em yêu! Người ta thường chúc nhau sớm chạm đến đỉnh cao này nọ, nhưng giữa những ngày em một mình vừa học thạc sĩ, vừa lo toan bao thứ nơi xứ Đài, anh chỉ mong những điều dịu dàng nhất sẽ ôm lấy em và sức khỏe của em.
+Mong mấy vết mẩn ngứa lì lợm kia sớm biến mất hẳn để trả lại cho em sự thoải mái, dễ chịu. Mong những bài vở, áp lực nghiên cứu bên kia bớt dồn dập, để tâm trí em được thư thái và mỗi tối đặt lưng xuống là có ngay một giấc ngủ thật sâu, êm ấm đến sáng. Du học xa nhà một mình vất vả nhiều rồi, tuổi mới nhớ thương lấy mình và tự chiều chuộng bản thân nhiều hơn một chút nhé.
+Chúc hành trình thạc sĩ của em thật thuận lợi, việc gì cũng hanh thông và nụ cười rạng rỡ đặc trưng ấy lúc nào cũng nở trên môi. Dù khoảng cách địa lý có là một chuyến bay hay cả ngàn cây số, thì ở Việt Nam, anh vẫn luôn ở đây làm điểm tựa vững vàng nhất cho em. Ngoài kia áp lực ra sao, mệt mỏi thế nào, cứ nhớ phía sau luôn có anh hướng về em.
+Cứ an tâm giữ gìn sức khỏe và mỉm cười thật tươi, mọi thứ để anh lo! Yêu và nhớ em rất nhiều.
     </div>
 
     <div class="footer-love">Yêu em nhất trên đời ~ 💕✨</div>
@@ -746,10 +749,95 @@ Em đã vất vả nhiều rồi, tuổi mới hãy yêu thương và chiều ch
 
     let isBlowingOut = false;
 
+    // Hiệu ứng âm thanh tiếng thổi nến "Phùuuu..." (Web Audio API)
+    function playBlowSound() {
+      try {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) return;
+        const ctx = new AudioContextClass();
+        if (ctx.state === 'suspended') {
+          ctx.resume();
+        }
+
+        const now = ctx.currentTime;
+        const duration = 1.15;
+
+        // 1. Tạo luồng hơi thở (Pink-ish Noise mềm mại)
+        const bufferSize = Math.floor(ctx.sampleRate * duration);
+        const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        let b0 = 0, b1 = 0, b2 = 0;
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          b0 = 0.997 * b0 + white * 0.029;
+          b1 = 0.985 * b1 + white * 0.1;
+          b2 = 0.950 * b2 + white * 0.3;
+          output[i] = (b0 + b1 + b2 + white * 0.18) * 0.35;
+        }
+
+        const noiseSource = ctx.createBufferSource();
+        noiseSource.buffer = noiseBuffer;
+
+        // Bộ lọc cộng hưởng môi tròn khi thổi "Phùuuu..."
+        const bandpass = ctx.createBiquadFilter();
+        bandpass.type = 'bandpass';
+        bandpass.Q.setValueAtTime(2.4, now);
+        bandpass.frequency.setValueAtTime(720, now);
+        bandpass.frequency.exponentialRampToValueAtTime(420, now + 0.18);
+        bandpass.frequency.exponentialRampToValueAtTime(320, now + 0.75);
+        bandpass.frequency.exponentialRampToValueAtTime(240, now + duration);
+
+        // Bộ lọc trầm giúp tiếng gió êm và thật hơn
+        const lowpass = ctx.createBiquadFilter();
+        lowpass.type = 'lowpass';
+        lowpass.frequency.setValueAtTime(1500, now);
+        lowpass.frequency.exponentialRampToValueAtTime(850, now + duration);
+
+        // Âm lượng hơi thổi: bật nhẹ chữ "Ph-" rồi ngân dài "-ùuuu" và nhỏ dần
+        const breathGain = ctx.createGain();
+        breathGain.gain.setValueAtTime(0.0001, now);
+        breathGain.gain.linearRampToValueAtTime(0.55, now + 0.05);
+        breathGain.gain.linearRampToValueAtTime(0.42, now + 0.15);
+        breathGain.gain.linearRampToValueAtTime(0.48, now + 0.45);
+        breathGain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+        noiseSource.connect(bandpass);
+        bandpass.connect(lowpass);
+        lowpass.connect(breathGain);
+        breathGain.connect(ctx.destination);
+
+        noiseSource.start(now);
+        noiseSource.stop(now + duration);
+
+        // 2. Âm bật môi đầu hơi "Ph-" (trầm ấm)
+        const puffOsc = ctx.createOscillator();
+        const puffGain = ctx.createGain();
+        puffOsc.type = 'sine';
+        puffOsc.frequency.setValueAtTime(150, now);
+        puffOsc.frequency.exponentialRampToValueAtTime(55, now + 0.11);
+
+        puffGain.gain.setValueAtTime(0.0001, now);
+        puffGain.gain.linearRampToValueAtTime(0.22, now + 0.02);
+        puffGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+
+        puffOsc.connect(puffGain);
+        puffGain.connect(ctx.destination);
+        puffOsc.start(now);
+        puffOsc.stop(now + 0.13);
+
+        setTimeout(() => {
+          ctx.close().catch(() => {});
+        }, (duration + 0.2) * 1000);
+      } catch (e) {}
+    }
+
     // Thổi nến và mở thiệp
     function openEnvelope() {
       if (isBlowingOut) return;
       isBlowingOut = true;
+
+      // Phát âm thanh thổi nến "Phùuuu..."
+      playBlowSound();
 
       const label = document.getElementById('cakeLabel');
       if (label) {
