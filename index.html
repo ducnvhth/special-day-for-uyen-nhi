@@ -290,6 +290,40 @@
       margin-bottom: 15px;
     }
 
+    /* Bộ chọn ngôn ngữ lời chúc */
+    .lang-switcher {
+      display: inline-flex;
+      gap: 6px;
+      background: #fff0f5;
+      padding: 4px;
+      border-radius: 30px;
+      border: 1.5px solid #ffd1dc;
+      margin-bottom: 12px;
+    }
+
+    .lang-btn {
+      border: none;
+      background: transparent;
+      color: #ff5c8a;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 12.5px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .lang-btn:hover {
+      background: #ffe3ec;
+    }
+
+    .lang-btn.active {
+      background: #ff3366;
+      color: #ffffff;
+      box-shadow: 0 3px 8px rgba(255, 51, 102, 0.3);
+    }
+
     .letter-body {
       background: #fff8f9;
       border: 1.5px dashed #ffccd5;
@@ -300,6 +334,7 @@
       font-size: 14.5px;
       line-height: 1.65;
       margin-bottom: 18px;
+      transition: opacity 0.2s ease;
     }
 
     .footer-love {
@@ -585,8 +620,15 @@
       </div>
     </div>
 
+    <!-- Bộ chọn ngôn ngữ lời chúc -->
+    <div class="lang-switcher">
+      <button class="lang-btn active" id="lang-vi" onclick="setWishLang('vi')">🇻🇳 Tiếng Việt</button>
+      <button class="lang-btn" id="lang-zh" onclick="setWishLang('zh')">🇨🇳 Tiếng Trung</button>
+      <button class="lang-btn" id="lang-en" onclick="setWishLang('en')">🇬🇧 Tiếng Anh</button>
+    </div>
+
     <!-- LỜI CHÚC CHO UYỂN NHI -->
-    <div class="letter-body">
+    <div class="letter-body" id="letterBody">
       Gửi Uyển Nhi - cô gái ngọt ngào và năng lượng nhất trần đời!<br>
       Chúc mừng sinh nhật em yêu! Người ta thường chúc nhau sớm chạm đến đỉnh cao này nọ, nhưng giữa những ngày em một mình vừa học thạc sĩ, vừa lo toan bao thứ nơi xứ Đài, anh chỉ mong những điều dịu dàng nhất sẽ ôm lấy em và sức khỏe của em.
 Mong mấy vết mẩn ngứa lì lợm kia sớm biến mất hẳn để trả lại cho em sự thoải mái, dễ chịu. Mong những bài vở, áp lực nghiên cứu bên kia bớt dồn dập, để tâm trí em được thư thái và mỗi tối đặt lưng xuống là có ngay một giấc ngủ thật sâu, êm ấm đến sáng. Du học xa nhà một mình vất vả nhiều rồi, tuổi mới nhớ thương lấy mình và tự chiều chuộng bản thân nhiều hơn một chút nhé.
@@ -594,11 +636,60 @@ Chúc hành trình thạc sĩ của em thật thuận lợi, việc gì cũng ha
 Cứ an tâm giữ gìn sức khỏe và mỉm cười thật tươi, mọi thứ để anh lo! Yêu và nhớ em rất nhiều.
     </div>
 
-    <div class="footer-love">Yêu em nhất trên đời ~ 💕✨</div>
+    <div class="footer-love" id="footerLove">Yêu em nhất trên đời ~ 💕✨</div>
   </div>
 
   <script>
     let fireworksInterval = null;
+
+    // --- DỮ LIỆU LỜI CHÚC 3 NGÔN NGỮ (VIỆT - TRUNG - ANH) ---
+    const WISH_TRANSLATIONS = {
+      vi: {
+        body: `Gửi Uyển Nhi - cô gái ngọt ngào và năng lượng nhất trần đời!<br>
+      Chúc mừng sinh nhật em yêu! Người ta thường chúc nhau sớm chạm đến đỉnh cao này nọ, nhưng giữa những ngày em một mình vừa học thạc sĩ, vừa lo toan bao thứ nơi xứ Đài, anh chỉ mong những điều dịu dàng nhất sẽ ôm lấy em và sức khỏe của em.
+Mong mấy vết mẩn ngứa lì lợm kia sớm biến mất hẳn để trả lại cho em sự thoải mái, dễ chịu. Mong những bài vở, áp lực nghiên cứu bên kia bớt dồn dập, để tâm trí em được thư thái và mỗi tối đặt lưng xuống là có ngay một giấc ngủ thật sâu, êm ấm đến sáng. Du học xa nhà một mình vất vả nhiều rồi, tuổi mới nhớ thương lấy mình và tự chiều chuộng bản thân nhiều hơn một chút nhé.
+Chúc hành trình thạc sĩ của em thật thuận lợi, việc gì cũng hanh thông và nụ cười rạng rỡ đặc trưng ấy lúc nào cũng nở trên môi. Dù khoảng cách địa lý có là một chuyến bay hay cả ngàn cây số, thì ở Việt Nam, anh vẫn luôn ở đây làm điểm tựa vững vàng nhất cho em. Ngoài kia áp lực ra sao, mệt mỏi thế nào, cứ nhớ phía sau luôn có anh hướng về em.
+Cứ an tâm giữ gìn sức khỏe và mỉm cười thật tươi, mọi thứ để anh lo! Yêu và nhớ em rất nhiều.`,
+        footer: 'Yêu em nhất trên đời ~ 💕✨'
+      },
+      zh: {
+        body: `致婉儿（Uyển Nhi）——这世上最甜美、最充满活力的女孩！<br>
+      亲爱的，生日快乐！人们总喜欢祝彼此早日登上人生巅峰，但在你独自一人在台湾一边攻读硕士、一边操心生活点滴的日子里，我只愿世间所有的温柔都能拥抱你，护佑你的健康。
+愿那些恼人的皮肤红痒早日彻底消退，还你一身轻松自在；愿那边的课业与科研压力不再那么紧迫，让你的身心得以舒展，每晚躺下都能拥有一整夜深沉、安稳的好眠。独自远赴异乡求学已经太辛苦了，新的一岁，记得多心疼自己，多宠爱自己一点哦。
+祝你的硕士之旅一切顺遂，万事胜意，那抹标志性的灿烂笑容永远绽放在你脸上。无论我们之间隔着一趟航班还是千山万水，在越南的我，永远是你最坚实的依靠。不管外面的世界有多大压力、多么疲惫，请记得身后总有我一直朝着你的方向守候。
+安心照顾好身体，开心地笑吧，一切有我呢！无比爱你、想你。`,
+        footer: '全世界最爱你 ~ 💕✨'
+      },
+      en: {
+        body: `To Uyển Nhi — the sweetest and most energetic girl in the world!<br>
+      Happy birthday, my love! People often wish each other grand successes and new heights, but in these days while you're all on your own pursuing your Master's degree and taking care of everything in Taiwan, I only wish for the gentlest things in life to embrace you and your health.
+May those stubborn, itchy rashes soon disappear completely so you can feel comfortable and at ease again. May your coursework and research pressure lighten up, giving your mind peace so that every night your head touches the pillow, you fall into a deep, warm sleep until morning. Studying abroad far from home all by yourself has been so tough already—in this new chapter, remember to be gentle with yourself and spoil yourself a little more.
+Wishing your Master's journey smooth sailing, success in everything you do, and that signature radiant smile always shining on your face. Whether the distance between us is a flight or thousands of miles, right here in Vietnam, I will always be your steadiest support. No matter how stressful or exhausting the world out there gets, just remember I am always right behind you, looking toward you.
+Just rest assured, take good care of your health, and smile brightly—leave everything else to me! I love and miss you so much.`,
+        footer: 'Love you most in the world ~ 💕✨'
+      }
+    };
+
+    function setWishLang(lang) {
+      const data = WISH_TRANSLATIONS[lang];
+      if (!data) return;
+
+      ['vi', 'zh', 'en'].forEach(code => {
+        const btn = document.getElementById('lang-' + code);
+        if (btn) btn.classList.toggle('active', code === lang);
+      });
+
+      const letterEl = document.getElementById('letterBody');
+      const footerEl = document.getElementById('footerLove');
+      if (letterEl) {
+        letterEl.style.opacity = '0';
+        setTimeout(() => {
+          letterEl.innerHTML = data.body;
+          if (footerEl) footerEl.innerText = data.footer;
+          letterEl.style.opacity = '1';
+        }, 150);
+      }
+    }
 
     // --- HỆ THỐNG NHẠC HỘP NHẠC (WEB AUDIO API) HAPPY BIRTHDAY ---
     let audioCtx = null;
